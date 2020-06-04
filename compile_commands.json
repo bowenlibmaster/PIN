@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/workspace/NewMask-Layout/build",
+  "command": "/bin/g++-9  -DGDS_FILENAME=\\\"mask_example.gds\\\" -DMASK_NAME=\\\"mask_example\\\" -I/home/gitpod/.conan/data/pdk_demo/0.2/cmalips/stable/package/87ef6fce881512efaab0884f03d0056e7a545b69/include -I/home/gitpod/.conan/data/Libmask/7.0/cmalips/stable/package/119948a9e09e738cc0a192712d70560144c238cf/include     -g    -std=gnu++17 -o CMakeFiles/mask_example.dir/main.cpp.o -c /workspace/NewMask-Layout/main.cpp",
+  "file": "/workspace/NewMask-Layout/main.cpp"
+}
+]
