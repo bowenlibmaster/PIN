@@ -1,8 +1,8 @@
 tasks:
-  - init: echo "Replace me with a build script for the project."
-    command: klayout &
+  - init: echo ""
+    command: (klayout -e &) && (xclock -update 1 -geometry 16x16-0+0 &)
 image: lewisyuan/masklayout
-#   file: .gitpod.Dockerfile
+#   file: Dockerfile
 ports:
   - port: 5900
     onOpen: ignore
@@ -13,3 +13,4 @@ vscode:
   extensions:
     - twxs.cmake@0.0.17:9s7m9CWOr6i6NZ7CNNF4kw==
     - ms-vscode.cmake-tools@1.4.0:eP3hU/MFme+CcSL21Klk1w==
+    - ms-vscode.cpptools@0.28.0:3bMoEAAzdrP+gtq/4qm44Q==
