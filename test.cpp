@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
 /* The MMI design */
 void mask(int i) {
     layer(L_waveguides);
-    org(4950_um,5000_um,0,NOFLIP);
+    org(4950_um,1100_um,0,NOFLIP);
 //    FLIPCP;
 //    rotate(-50_deg);
 //    show_cp(10_um);
@@ -172,7 +172,7 @@ void mask(int i) {
         >> NEW(MMI).O_PORTS["in2"] >> PUSH >> "out2"
         >> NEW(CONNECTOR_SINE_BEND)
         >> CBT2.O_PORTS["in2"] >> POP >> "out1" >> FLIP_X
-        >> NEW(SINE_BEND, 100_um, 100_um);
+        >> NEW(SINE_BEND, 1000_um, 100_um);
         // >> NEW(CONNECTOR_SINE_BEND) >> CBT2.O_PORTS["in1"] >> "out1" >>NEW(SW, 10_um) >> NEW(MZI).O_PORTS["in1"] >> "out1" >> NEW(EULER_BEND, 50_um, 180_deg) >> s >> POP >> NEW(SINE_BEND, 100_um, 100_um);
 
 
