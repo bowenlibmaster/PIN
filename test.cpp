@@ -1,5 +1,4 @@
 //
-// Created by Yuan on 2018/12/6.
 //
 
 #include "IPL_Extension.h"
@@ -11,9 +10,9 @@
 //#define GDS_FILENAME "mask_example.gds"
 //#define MASK_NAME "JK_Extension"
 
-#include "pdk_demo.h"
+#include "pdk_Xtech.h"
 
-LOAD_PDK(PDK_DEMO);
+LOAD_PDK(PDK_Xtech);
 
 
 void mask(int);
@@ -23,278 +22,530 @@ int main(int argc, char **argv) {
     setfont((char *)"caps.plf");
     msk_init();
     msk_add_sublayout(MASK_NAME, mask);
-
     msk_export(GDS_FILENAME);
-    update_KLayout((char *)"KLayout 0.24.4");
+    update_KLayout((char *)"KLayout 0.24.10");
 }
 
-//int w = 0;
-//void c_mmi(PortBase &portBase, int n, int m){
-//    if(!m){
-//        return;
-//    }
-//    var t= portBase;
-//    for (int i = 0; i < n; i++) {
-//        var k = NEW(MMI);
-//        w ++;
-//        t = t
-//                >> NEW(EULER_BEND, 360_deg /n)
-//                >> k("in2", "out2");
-//        c_mmi(k.O_PORTS["out1"].flip_x(), n, m - 1);
-//    }
-//    t >>NEW (EULER_BEND, 360_deg /n);
-//}
 
 
 
-/* The MMI design */
+
+
 void mask(int i) {
-    layer(L_waveguides);
-    org(4950_um,1100_um,0,NOFLIP);
-//    FLIPCP;
-//    rotate(-50_deg);
-//    show_cp(10_um);
-//    pointer cp1 {4940_um, 4990_um, -30_deg, NOFLIP};
-//    BLOCK {
-//        cp = cp1;
-//        show_cp(10_um);
-//    }
-//    move(diff(cp, cp1));
-//    show_cp(10_um);
-//    DEBUG_SHOW(cp.x);DEBUG_SHOW(cp.y);DEBUG_SHOW(cp.a);DEBUG_SHOW(cp.flip);
-//    cp = {0, 0, 0, NOFLIP};
+
+    double DieL =7000_um, DieW = 7000_um;
+    double shiftx = 200_um, shifty = 90_um, stepperfine = 200e-6;
+
     BLOCK {
-//        sw(100_um, 1_um);
-//        SW ss(100_um);
-//        ss.place();
-//        FLIPCP
-//        ss.Connect(MMI().O_PORTS["in2"]);
-//BLOCK {
-//    layer(3);
-//    double Length_MMI = 100.175_um, Width_MMI = 9_um;
-//    double Width_Taper_in = 0.55_um, Width_Taper_out = 2.2_um, Length_Taper = 24.75_um;
-//    double Pitch_IO = 3_um;
-//    cw(100_um, 45_deg, 0.55_um);
-//    show_cp(10_um);
-//    mmi_2x2taper(Length_MMI, Width_MMI, Width_Taper_in, Width_Taper_out, Length_Taper, Pitch_IO / 2.0,
-//                 -Pitch_IO / 2.0, Pitch_IO / 2.0, -Pitch_IO / 2.0, 90_deg);
-//    show_cp(10_um);
-//    cw(100_um, 90_deg, 0.55_um);
-//    show_cp(10_um);
-//    mmi_2x2taper(Length_MMI, Width_MMI, Width_Taper_in, Width_Taper_out, Length_Taper, Pitch_IO / 2.0,
-//                 -Pitch_IO / 2.0, Pitch_IO / 2.0, -Pitch_IO / 2.0, 90_deg);
-//    show_cp(10_um);
-//}
-//        layer(L_waveguides);
-//        for (int i = 0; i < 12; i++) {
-//            BLOCK {
-//                NEW(SW, 100_um).place();
-//                NEW(SW, 100_um).place();
-//                NEW(MMI).place();
-//                show_cp(10_um);
-//            }
-//            rotate(360_deg / 12);
-//
-//        }
+        skip(-DieL / 2);
+        layer(L_Cleavemarks);
+        sw(DieL, DieW);
+    };
+    BLOCK {
+        org(-DieL / 2 + shiftx, DieW / 2 - shifty, 0, 0);
+        NEW(STEPPER_1).place();
+        skip(stepperfine);
+        NEW(STEPPER_2).place();
+        skip(stepperfine);
+        NEW(EBL_LOCAL_MARK_TEMP, 100_um, 100_um, 1).place();
 
-//        var CBT = NEW_DEVICE<MMI>();
-        var CBT = *(new MMI());
-////
-//        var CBT2 = NEW(MMI);
-////
-//        var ss = NEW(SW, 10_um);
-//
-//        var eb = NEW(CW, 120_deg);
+        org(-DieL / 2 + 4 * shiftx, DieW / 2 - shifty, 0, 0);
+        NEW(STEPPER_1).place();
+        skip(stepperfine);
+        NEW(STEPPER_2).place();
+        skip(stepperfine);
+        NEW(EBL_LOCAL_MARK_TEMP, 100_um, 100_um, 0).place();
 
-//        eb.place();
+        org(DieL / 2 - shiftx, DieW / 2 - shifty, 0, 0);
+        NEW(STEPPER_1).place();
+        skip(-stepperfine);
+        NEW(STEPPER_2).place();
+        skip(-stepperfine);
+        NEW(EBL_LOCAL_MARK_TEMP, 100_um, 100_um, 1).place();
 
-//        var ss2 = NEW(SW, 10_um);
+        org(DieL / 2 - 4 * shiftx, DieW / 2 - shifty, 0, 0);
+        NEW(STEPPER_1).place();
+        skip(-stepperfine);
+        NEW(STEPPER_2).place();
+        skip(-stepperfine);
+        NEW(EBL_LOCAL_MARK_TEMP, 100_um, 100_um, 0).place();
 
+        org(-DieL / 2 + shiftx, -DieW / 2 + shifty, 0, 0);
+        NEW(STEPPER_1).place();
+        skip(stepperfine);
+        NEW(STEPPER_2).place();
+        skip(stepperfine);
+        NEW(EBL_LOCAL_MARK_TEMP, 100_um, 100_um, 1).place();
 
-//          DEBUG_SHOW(NEW_DEVICE("MMI","1"));
-//        MMI dn = MMI();
-//        dn.place();
-//        var CBT = NEW(MMI(dn));
-//        cw(100_um, 45_deg, 0.55_um);
-//        show_cp(10_um);
-//        BLOCK {
-//            DEBUG_SHOW(cp.x);
-//            DEBUG_SHOW(cp.y);
-//            DEBUG_SHOW(cp.a);
-////        euler_curve(100_um, 90_deg, 0.55_um);
-//            NEW(EULER_BEND, 90_deg).place();
-////        show_cp(10_um);
-//            DEBUG_SHOW(cp.x);
-//            DEBUG_SHOW(cp.y);
-//            DEBUG_SHOW(cp.a);
-//            NEW(MMI).place();
-//        }
-//        BLOCK {
-//            DEBUG_SHOW(cp.x);
-//            DEBUG_SHOW(cp.y);
-//            DEBUG_SHOW(cp.a);
-//        euler_curve(100_um, 90_deg, 0.55_um);
-////            NEW(EULER_BEND, 90_deg).place();
-////        show_cp(10_um);
-//            DEBUG_SHOW(cp.x);
-//            DEBUG_SHOW(cp.y);
-//            DEBUG_SHOW(cp.a);
-//            NEW(MMI).place();
-//        }
-//        move(1_nm, 1_nm, 0, NOFLIP);
+        org(-DieL / 2 + 4 * shiftx, -DieW / 2 + shifty, 0, 0);
+        NEW(STEPPER_1).place();
+        skip(stepperfine);
+        NEW(STEPPER_2).place();
+        skip(stepperfine);
+        NEW(EBL_LOCAL_MARK_TEMP, 100_um, 100_um, 0).place();
 
-//        rotate(30_deg);
-        CBT.place();
-        var CBT2 = NEW(MMI);
-        move(800_um, 250_um, 0, NOFLIP);
-        CBT2.place();
+        org(DieL / 2 - shiftx, -DieW / 2 + shifty, 0, 0);
+        NEW(STEPPER_1).place();
+        skip(-stepperfine);
+        NEW(STEPPER_2).place();
+        skip(-stepperfine);
+        NEW(EBL_LOCAL_MARK_TEMP, 100_um, 100_um, 1).place();
 
-//        auto t = decltype(CBT)(CBT);
-//        show_cp(10_um);
+        org(DieL / 2 - 4 * shiftx, -DieW / 2 + shifty, 0, 0);
+        NEW(STEPPER_1).place();
+        skip(-stepperfine);
+        NEW(STEPPER_2).place();
+        skip(-stepperfine);
+        NEW(EBL_LOCAL_MARK_TEMP, 100_um, 100_um, 0).place();
 
-//        hash(std::to_string(CBT.O_PORTS["in1"]));
-//        CBT.O_PORTS["out2"].SetCurrentPosition();
-//        CBT.O_PORTS["out2"] >> NEW(MMI) >> NEW(SINE_BEND, CBT2.O_PORTS["in2"]);
-
-//        var t = *(new TERMINATION_PORT<O_PORT>("in", "TERMINATION_O_PORT", cp, nullptr, nullptr, nullptr));
-
-        var s = NEW(SW, 100_um);
-
-        s >> FLIP_X >>NEW(CW, 100_um, 90_deg) >> NEW(SW, 100_um) >> PUSH;
-
-//        t.SetCurrentPosition();
-
-//        t >> CBT.O_PORTS["in1"] >> "out2" >> NEW(MMI).O_PORTS["in2"] >> PUSH >> "out2" >> NEW(CONNECTOR_SINE_BEND) >> CBT2.O_PORTS["in2"] >> POP >> "out1" >> FLIP_X >> NEW(SINE_BEND, 100_um, 100_um) >> NEW(CONNECTOR_SINE_BEND) >> CBT2.O_PORTS["in1"] >> "out1" >>NEW(SW, 10_um) >> NEW(MZI).O_PORTS["in1"] >> "out1" >> NEW(EULER_BEND, 50_um, 180_deg) >> s >> POP >> NEW(SINE_BEND, 100_um, 100_um);
+    };
 
 
+    double Ystart = DieW/2, xstart = -DieL/2, xshift  = 600e-6, ydelta = -700e-6;
+    double tempXorg = -5477.0_um, tempYorg =-300.00000_um;
+    int fdevpointer = 1;
+    double deviceL = 125_um, deviceW = 7_um, xalign = 10_um;
+    //DBR mirror intilization
+    double DBRTaperLength = 30e-6, DBRw =  1e-6 , DBRtop =  0.123e-6, DBRetched =0.123e-6, DBRnum_periods = 300, DBRein =  0.1e-6, DBRst = 200e-6;
+    double NanoWdith = 10e-6, nanopitch = 0e-6, ffn = 0.666666666666666666, nanogap  =1e-6;
+    int oderr = NanoWdith/nanopitch;
+    double pt2 = 0.17_um,ff2 = 0.4, pt1 = 1.187_um,ff1=0.59;
 
-    CBT.O_PORTS["out2"]
-        >> NEW(MMI).O_PORTS["in2"] >> PUSH >> "out2"
-        >> NEW(CONNECTOR_SINE_BEND)
-        >> CBT2.O_PORTS["in2"] >> POP >> "out1" >> FLIP_X
-        >> NEW(SINE_BEND, 1000_um, 100_um);
-        // >> NEW(CONNECTOR_SINE_BEND) >> CBT2.O_PORTS["in1"] >> "out1" >>NEW(SW, 10_um) >> NEW(MZI).O_PORTS["in1"] >> "out1" >> NEW(EULER_BEND, 50_um, 180_deg) >> s >> POP >> NEW(SINE_BEND, 100_um, 100_um);
+    double R = 52_um, gap = 0.17_um, lcoalwg = 0.5_um;
+    double HeaterRatio = 0.6, temp = (1-HeaterRatio)*2*M_PI/4;
+    int turning = 6;
+    double OverStep = 10_um, EtaperL = 30_um, padL = 100_um, overlapHeater = 1_um,nonheatersession = 6;
+    double thedta = 20, tempteta = 0, lno = 0, widt = 0, ln1 = 0, dl = 0,overwg = 3_um, DeviceShift = 200e-6, DeviceXorg = -DieL / 2 + shiftx;
+    double laserRidge = 3_um, ridgeshift = -0_um;
 
+    double contrrolangle = 0;
+    double cirw = 10_um,cirr = 40_um, rr = 105_um, arm = 10_um, width = 1_um,gapp = 5_um;
+    double P_pad = 10_um, nholew = 40_um, nholerate  = 4,nviarate = 0.8, ncover = 3, ncoverL = 8;
+    double YdeviceGap = 275_um,YdeviceGap2 = 165_um;
+    int everyrow1 = 12,everyrow2 = 20,everyrow = 1;
 
+    ///////////////////////////device intinalzition///////////////////////////
+        deviceL = 125_um;
+        deviceW = 15_um;
+        laserRidge = 3_um;
+        nanogap = 0;
+    ///////////////////////////device intinalzition///////////////////////////
 
+    for(int i = 0;i<everyrow2;i++)
 
+    {
+        if ( i % 2 == 1 )
+        {
+            contrrolangle = 1;
+                    }
 
-//        CBT.O_PORTS["out1"].SetCurrentPosition();
-//        CBT.O_PORTS["out2"] >> NEW(MMI) >> NEW(SINE_BEND, CBT2.O_PORTS["in2"]);
-//        CBT.O_PORTS["out1"] >> NEW(CONNECTOR_SINE_BEND) >> CBT2.O_PORTS["in1"];
-//        DEBUG_SHOW(hash(CBT.O_PORTS["out2"]));
-//        show_cp(10_um);
-//        offset(3_um);
-//        DEBUG_SHOW(cp.x);
-//        DEBUG_SHOW(cp.y);
-//        DEBUG_SHOW(cp.a);
-//        cw(100_um, 45_deg, 0.55_um);
-
-//        double Length_MMI = 100.175_um, Width_MMI = 9_um;
-//        double Width_Taper_in = 0.55_um, Width_Taper_out = 2.2_um, Length_Taper = 24.75_um;
-//        double Pitch_IO = 3_um;
-//        mmi_2x2taper(Length_MMI, Width_MMI, Width_Taper_in, Width_Taper_out, Length_Taper, Pitch_IO / 2.0,
-//                     -Pitch_IO / 2.0, Pitch_IO / 2.0, -Pitch_IO / 2.0, 90_deg);
-//        cw(100_um, 45_deg, 0.55_um);
-
-
-//        CBT.O_PORTS["out1"].SetCurrentPosition();
-//        show_cp(10_um);
-//        cw(100_um, 90_deg, 0.55_um);
-//        show_cp(10_um);
-//        CBT2.place();
-//        show_cp(10_um);
-//        CBT.O_PORTS["out1"] >> ss;
-//        show_cp(10_um);
-//        taper(20_um, 0.55_um, 2_um);
-//        ss >> CBT2("in1", "out1");
-
-//          c_mmi(CBT.O_PORTS["out2"], 6,3);
-//          DEBUG_SHOW(w);
-//        CBT.O_PORTS["out2"]
-//            >> NEW(EULER_BEND, 60_deg)("out", "in", NOFLIP, FLIP)
-//            >> NEW(MMI)("in2", "out2", NOFLIP, FLIP)
-//            >> NEW(EULER_BEND, 60_deg)("out", "in", NOFLIP, FLIP)
-//            >> NEW(MMI)("in2", "out2", NOFLIP, FLIP)
-//            >> NEW(EULER_BEND, 60_deg)("out", "in", NOFLIP, FLIP)
-//            >> NEW(MMI)("in2", "out2", NOFLIP, FLIP)
-//            >> NEW(EULER_BEND, 60_deg)("out", "in", NOFLIP, FLIP)
-//            >> NEW(MMI)("in2", "out2", NOFLIP, FLIP)
-//            >> NEW(EULER_BEND, 60_deg)("out", "in", NOFLIP, FLIP)
-//            >> NEW(MMI)("in2", "out2", NOFLIP, FLIP)
-//            >> NEW(EULER_BEND, 60_deg)("out", "in", NOFLIP, FLIP);
-//
-//
-//        CBT.O_PORTS["out1"].flip_x()
-//                >> NEW(EULER_BEND, 60_deg)("out", "in", NOFLIP, FLIP)
-//                >> NEW(MMI)("in2", "out2", NOFLIP, FLIP)
-//                >> NEW(EULER_BEND, 60_deg)("out", "in", NOFLIP, FLIP)
-//                >> NEW(MMI)("in2", "out2", NOFLIP, FLIP)
-//                >> NEW(EULER_BEND, 60_deg)("out", "in", NOFLIP, FLIP)
-//                >> NEW(MMI)("in2", "out2", NOFLIP, FLIP)
-//                >> NEW(EULER_BEND, 60_deg)("out", "in", NOFLIP, FLIP)
-//                >> NEW(MMI)("in2", "out2", NOFLIP, FLIP)
-//                >> NEW(EULER_BEND, 60_deg)("out", "in", NOFLIP, FLIP)
-//                >> NEW(MMI)("in2", "out2", NOFLIP, FLIP)
-//                >> NEW(EULER_BEND, 60_deg)("out", "in", NOFLIP, FLIP);
-
-//        CBT.O_PORTS["out1"] >>CBT2("in1", "out1");
-//        show_cp(10_um);
-//        MMI CBT2 = NEW(MMI(CBT));
-//        auto test = NEW(MMI(CBT));
-//        show_cp(10_um);
-//        CBT.place();
-//        CBT.O_PORTS["out1"].flip_x();
-//        CBT.O_PORTS["out1"] >> CBT2("in1", "out1") >> test();
-//        CBT.O_PORTS["out1"] >> NEW(MMI())() >> NEW(SW(100_um)) >> NEW(SW(100_um)) >> NEW(MMI())()>> NEW(SW(100_um));
-//        show_cp(10_um);
+    org(DeviceXorg, -DieW / 2 + 3*shifty+YdeviceGap2*i, 0, NOFLIP);
+    move(0,0,0,FLIP);
+        NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle).place().O_PORTS["out0"]
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,3_um,laserRidge,contrrolangle);
 
 
-
-//        CBT.O_PORTS["out1"].flip_x()
-//        .Connect(NEW(SW,100_um))
-//        .Connect(NEW(MMI).O_PORTS["in2"]);
-//
-//        CBT.O_PORTS["out1"] >> FLIP_X
-//        >> NEW(SW, 100_um)
-//        >> NEW(MMI).O_PORTS["in2"];
-
-//
-// cw(100_um, 45_deg, 1_um);
-//        MMI CBT2 = MMI();
-//        CBT2.place();
-//        SW ss(100_um);
-
-//        CBT.O_PORTS["out1"].Connect(CBT2.O_PORTS["in1"]);
-
-//        CBT.push().O_PORTS["out1"].Connect(CBT2.push().O_PORTS["in1"]).O_PORTS["out2"].Connect(
-//                MMI().O_PORTS["in2"].flip_x()).pop().O_PORTS["out1"].Connect(
-//                MMI().O_PORTS["in2"]).pop().O_PORTS["out2"].Connect(MMI().O_PORTS["in1"]);
-
-//        CBT.O_PORTS[3].Connect(MMI().O_PORTS[0]);
-//          CBT.O_PORTS[2].SetCurrentPosition();
-//          show_cp(10_um);
-//          cw(100_um, 45_deg, 1_um);
-//          CBT.place();
-//        cp = CBT.PORTS_IN[0];
-//        sw(10_um, 1_um);
-//        cp = CBT.PORTS_OUT[0];
-//        sw(10_um, 1_um);
+        contrrolangle = 0;
     }
 
-//    offset(500_um);
-//    HOLD
-//        DEBUG_SHOW(euler_curve(100_um, -0_deg, 1_um));
-//        DEBUG_SHOW(sw(100_um, 1_um));
-//    ENDHOLD
+    ///////////////////////////device intinalzition///////////////////////////
+        deviceL = 125_um;
+        deviceW = 25_um;
+        laserRidge = 3_um;
+        nanogap = 0;
+    ///////////////////////////device intinalzition///////////////////////////
+    
+        for(int i = 0;i<everyrow1;i++){
 
-//    offset(500_um);
-//    HOLD
-//        sine_bend(100_um, 100_um, 1_um);
-//        DEBUG_SHOW(sine_bend(0.0008602450078, -0.0009580316277, 1_um));
-//        sine_bend(100_um, -100_um, 1_um);
-//        DEBUG_SHOW(sw(100_um, 1_um));
-//    ENDHOLD
+            if ( i % 2 == 0 )
+            {
+                contrrolangle = 1;
+            }
 
+            org(DeviceXorg, -DieW / 2 + 3*shifty+YdeviceGap*i+YdeviceGap2*everyrow2, 0, FLIP);
+            NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle).place().O_PORTS["out0"]
+                    >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                    >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                    >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                    >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                    >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                    >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                    >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                    >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                    >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                    >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                    >>NEW(SAG_FP,deviceL,deviceW,3_um,laserRidge,contrrolangle);
+        }
+
+
+
+    ////////////////////////////////////////////////////////
+    DeviceXorg = DeviceXorg+2000_um;
+    ////////////////////////////////////////////////////////
+
+///////////////////////////device intinalzition///////////////////////////
+        deviceL = 125_um;
+        deviceW = 15_um;
+        laserRidge = 3_um;
+        nanogap = 0;
+///////////////////////////device intinalzition///////////////////////////
+
+    for(int i = 0;i<everyrow2;i++){
+
+
+        if ( i % 2 == 1 )
+        {
+            contrrolangle = 1;
+        }
+
+
+        org(DeviceXorg, -DieW / 2 + 3*shifty+YdeviceGap2*i, 0, FLIP);
+        NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle).place().O_PORTS["out0"]
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,3_um,laserRidge,contrrolangle);
+
+       contrrolangle = 0;
+
+    }
+
+
+///////////////////////////device intinalzition///////////////////////////
+        deviceL = 125_um;
+        deviceW = 25_um;
+        laserRidge = 3_um;
+        nanogap = 0;
+///////////////////////////device intinalzition///////////////////////////
+
+    for(int i = 0;i<everyrow1;i++){
+
+        if ( i % 2 == 1 )
+        {
+            contrrolangle = 1;
+        }
+
+        org(DeviceXorg, -DieW / 2 + 3*shifty+YdeviceGap*i+YdeviceGap2*everyrow2, 0, FLIP);
+        NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle).place().O_PORTS["out0"]
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,3_um,laserRidge,contrrolangle);
+        contrrolangle = 0;
+
+    }
+
+
+    ////////////////////////////////////////////////////////
+    DeviceXorg = DeviceXorg+700_um;
+    ////////////////////////////////////////////////////////
+
+///////////////////////////device intinalzition///////////////////////////
+        deviceL = 125_um;
+        deviceW = 15_um;
+        laserRidge = 3_um;
+        nanogap = 0;
+///////////////////////////device intinalzition///////////////////////////
+
+    for(int i = 0;i<everyrow2;i++){
+
+        if ( i % 2 == 1 )
+        {
+            contrrolangle = 1;
+        }
+
+        org(DeviceXorg, -DieW / 2 + 3*shifty+YdeviceGap2*i, 0, FLIP);
+        NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle).place().O_PORTS["out0"]
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,3_um,laserRidge,contrrolangle);
+        contrrolangle = 0;
+
+
+    }
+
+
+///////////////////////////device intinalzition///////////////////////////
+        deviceL = 125_um;
+        deviceW = 25_um;
+        laserRidge = 3_um;
+        nanogap = 0;
+///////////////////////////device intinalzition///////////////////////////
+
+    for(int i = 0;i<everyrow1;i++){
+
+        if ( i % 2 == 1 )
+        {
+            contrrolangle = 1;
+        }
+
+        org(DeviceXorg, -DieW / 2 + 3*shifty+YdeviceGap*i+YdeviceGap2*everyrow2, 0, FLIP);
+        NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle).place().O_PORTS["out0"]
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,3_um,laserRidge,contrrolangle);
+        contrrolangle = 0;
+
+    }
+
+
+    ////////////////////////////////////////////////////////
+    DeviceXorg = DeviceXorg+700_um;
+    ////////////////////////////////////////////////////////
+
+///////////////////////////device intinalzition///////////////////////////
+         deviceL = 125_um;
+        deviceW = 15_um;
+        laserRidge = 3_um;
+        nanogap = 0;
+///////////////////////////device intinalzition///////////////////////////
+
+    for(int i = 0;i<everyrow2;i++){
+
+        if ( i % 2 == 1 )
+        {
+            contrrolangle = 1;
+        }
+
+        org(DeviceXorg, -DieW / 2 + 3*shifty+YdeviceGap2*i, 0, FLIP);
+        NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle).place().O_PORTS["out0"]
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,3_um,laserRidge,contrrolangle);
+        contrrolangle = 0;
+
+    }
+
+
+///////////////////////////device intinalzition///////////////////////////
+        deviceL = 125_um;
+        deviceW = 25_um;
+        laserRidge = 3_um;
+        nanogap = 0;
+///////////////////////////device intinalzition///////////////////////////
+
+    for(int i = 0;i<everyrow1;i++){
+
+        if ( i % 2 == 1 )
+        {
+            contrrolangle = 1;
+        }
+
+        org(DeviceXorg, -DieW / 2 + 3*shifty+YdeviceGap*i+YdeviceGap2*everyrow2, 0, FLIP);
+        NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle).place().O_PORTS["out0"]
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,3_um,laserRidge,contrrolangle);
+        contrrolangle = 0;
+
+    }
+
+
+  
+    ////////////////////////////////////////////////////////
+    DeviceXorg = DeviceXorg+1100_um;
+    ////////////////////////////////////////////////////////
+
+///////////////////////////device intinalzition///////////////////////////
+        deviceL = 125_um;
+        deviceW = 15_um;
+        laserRidge = 3_um;
+        nanogap = 0;
+///////////////////////////device intinalzition///////////////////////////
+
+    for(int i = 0;i<everyrow2;i++){
+
+        if ( i % 2 == 1 )
+        {
+            contrrolangle = 1;
+        }
+
+
+        org(DeviceXorg, -DieW / 2 + 3*shifty+YdeviceGap2*i, 0, FLIP);
+        NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle).place().O_PORTS["out0"]
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,3_um,laserRidge,contrrolangle);
+        contrrolangle = 0;
+
+    }
+
+
+///////////////////////////device intinalzition///////////////////////////
+        deviceL = 125_um;
+        deviceW = 25_um;
+        laserRidge = 3_um;
+        nanogap = 0;
+///////////////////////////device intinalzition///////////////////////////
+
+    for(int i = 0;i<everyrow1;i++){
+
+        if ( i % 2 == 1 )
+        {
+            contrrolangle = 1;
+        }
+
+        org(DeviceXorg, -DieW / 2 + 3*shifty+YdeviceGap*i+YdeviceGap2*everyrow2, 0, FLIP);
+        NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle).place().O_PORTS["out0"]
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,3_um,laserRidge,contrrolangle);
+        contrrolangle = 0;
+
+    }
+
+    ////////////////////////////////////////////////////////
+    DeviceXorg = DeviceXorg+1050_um;
+    ////////////////////////////////////////////////////////
+
+///////////////////////////device intinalzition///////////////////////////
+        deviceL = 125_um;
+        deviceW = 15_um;
+        laserRidge = 3_um;
+        nanogap = 0;
+///////////////////////////device intinalzition///////////////////////////
+
+    for(int i = 0;i<everyrow2;i++){
+        if ( i % 2 == 1 )
+        {
+            contrrolangle = 1;
+        }
+        org(DeviceXorg, -DieW / 2 + 3*shifty+YdeviceGap2*i, 0, FLIP);
+        NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle).place().O_PORTS["out0"]
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,3_um,laserRidge,contrrolangle);
+        contrrolangle = 0;
+
+    }
+
+
+///////////////////////////device intinalzition///////////////////////////
+        deviceL = 125_um;
+        deviceW = 25_um;
+        laserRidge = 3_um;
+        nanogap = 0;
+///////////////////////////device intinalzition///////////////////////////
+
+    for(int i = 0;i<everyrow1;i++){
+
+        if ( i % 2 == 1 )
+        {
+            contrrolangle = 1;
+        }
+
+        org(DeviceXorg, -DieW / 2 + 3*shifty+YdeviceGap*i+YdeviceGap2*everyrow2, 0, FLIP);
+        NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle).place().O_PORTS["out0"]
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,3_um,laserRidge,contrrolangle);
+        contrrolangle = 0;
+
+    }
+
+
+
+
+    ////////////////////////////////////////////////////////
+    DeviceXorg = DeviceXorg+800_um;
+    ////////////////////////////////////////////////////////
+
+///////////////////////////device intinalzition///////////////////////////
+        deviceL = 125_um;
+        deviceW = 15_um;
+        laserRidge = 3_um;
+        nanogap = 0;
+///////////////////////////device intinalzition///////////////////////////
+
+    for(int i = 0;i<everyrow2;i++){
+
+        if ( i % 2 == 1 )
+        {
+            contrrolangle = 1;
+        }
+
+        org(DeviceXorg, -DieW / 2 + 3*shifty+YdeviceGap2*i, 0, FLIP);
+        NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle).place().O_PORTS["out0"]
+                >>NEW(SAG_FP,deviceL,deviceW,3_um,laserRidge,contrrolangle);
+        contrrolangle = 0;
+
+
+    }
+
+
+///////////////////////////device intinalzition///////////////////////////
+        deviceL = 125_um;
+        deviceW = 25_um;
+        laserRidge = 3_um;
+        nanogap = 0;
+///////////////////////////device intinalzition///////////////////////////
+
+    for(int i = 0;i<everyrow1;i++){
+
+
+        org(DeviceXorg, -DieW / 2 + 3*shifty+YdeviceGap*i+YdeviceGap2*everyrow2, 0, FLIP);
+        NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle).place().O_PORTS["out0"]
+                >>NEW(SAG_FP,deviceL,deviceW,3_um,laserRidge,contrrolangle);
+        contrrolangle = 0;
+
+
+    }
+
+
+    BLOCK{
+        org(-DieL / 2, -2.75*shifty , 0, FLIP);
+        deviceW = 100_um;
+        contrrolangle = 0;
+        NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle).place().O_PORTS["out0"]
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,3_um,laserRidge,contrrolangle);
+    }
+
+        BLOCK{
+        org(-DieL / 2, DieW -5.25*shifty , 0, FLIP);
+        deviceW = 100_um;
+        contrrolangle = 0;
+        NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle).place().O_PORTS["out0"]
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,nanogap,laserRidge,contrrolangle)
+                >>NEW(SAG_FP,deviceL,deviceW,3_um,laserRidge,contrrolangle);
+    }
 
 }

@@ -1,0 +1,87 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.6"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "pdk_Xtech",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "export_pdk_Xtech::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-export_pdk_Xtech-Debug-4ce7246441596d4c3015.json",
+					"name" : "export_pdk_Xtech",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "pdk_Xtech::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-pdk_Xtech-Debug-c449993f3dcb528edb0d.json",
+					"name" : "pdk_Xtech",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_pdk_Xtech::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_pdk_Xtech-Debug-347ed2cf6b7f7c177ec1.json",
+					"name" : "test_pdk_Xtech",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "upload_PDK::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-upload_PDK-Debug-747fe408d062b533fead.json",
+					"name" : "upload_PDK",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/workspace/PIN/build",
+		"source" : "/workspace/PIN"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 0
+	}
+}

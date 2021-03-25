@@ -7,10 +7,10 @@ cmake_minimum_required(VERSION 3.6)
 
 # Change the PDK information below accordingly.
 
-set(PDK_NAME "pdk_demo")
+set(PDK_NAME "pdk_Xtech")
 set(PDK_VERSION "0.2")
-set(PDK_AUTHOR "Author name <email>")
-set(PDK_DESCRIPTION "A PDK development example.")
+set(PDK_AUTHOR "Bowen Song")
+set(PDK_DESCRIPTION "GenII-SiOI_500nmDemo")
 set(MASK_LIB_VERSION 7.0)
 ################
 

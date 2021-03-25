@@ -1,0 +1,35 @@
+[settings]
+    arch=x86_64
+    build_type=Debug
+    compiler=gcc
+    compiler.libcxx=libstdc++11
+    compiler.version=9
+    os=Linux
+
+[requires]
+    Libmask/7.Y.Z
+
+[options]
+
+
+[full_settings]
+    arch=x86_64
+    arch_build=x86_64
+    build_type=Debug
+    compiler=gcc
+    compiler.libcxx=libstdc++11
+    compiler.version=9
+    os=Linux
+    os_build=Linux
+
+[full_requires]
+    Libmask/7.0@cmalips/stable:119948a9e09e738cc0a192712d70560144c238cf
+
+[full_options]
+    Libmask:shared=False
+
+[recipe_hash]
+
+
+[env]
+

@@ -1,0 +1,14 @@
+{
+ "options": [
+  [
+   "Libmask:shared",
+   "False"
+  ]
+ ],
+ "root": {
+  "name": null,
+  "version": null,
+  "user": null,
+  "channel": null
+ }
+}

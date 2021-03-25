@@ -21,7 +21,7 @@
  * with libMask.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "pdk_demo.h"
+#include "pdk_Xtech.h"
 
 /* Mask layer number definitions */
 
