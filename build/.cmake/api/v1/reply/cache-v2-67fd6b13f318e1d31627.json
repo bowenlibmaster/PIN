@@ -1156,30 +1156,6 @@
 			],
 			"type" : "STATIC",
 			"value" : "/workspace/PIN"
-		},
-		{
-			"name" : "pdk_demo_BINARY_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "/workspace/PIN/build"
-		},
-		{
-			"name" : "pdk_demo_SOURCE_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "/workspace/PIN"
 		}
 	],
 	"kind" : "cache",
