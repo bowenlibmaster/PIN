@@ -29,11 +29,9 @@ int main(int argc, char **argv) {
 
 
 
-
-
 void mask(int i) {
 
-    double DieL =7000_um, DieW = 7000_um;
+    double DieL =5000_um, DieW = 5000_um;
     double shiftx = 200_um, shifty = 90_um, stepperfine = 200e-6;
 
     BLOCK {
@@ -122,11 +120,11 @@ void mask(int i) {
     double cirw = 10_um,cirr = 40_um, rr = 105_um, arm = 10_um, width = 1_um,gapp = 5_um;
     double P_pad = 10_um, nholew = 40_um, nholerate  = 4,nviarate = 0.8, ncover = 3, ncoverL = 8;
     double YdeviceGap = 275_um,YdeviceGap2 = 165_um;
-    int everyrow1 = 12,everyrow2 = 20,everyrow = 1;
+    int everyrow1 = 6,everyrow2 = 10,everyrow = 1;
 
     ///////////////////////////device intinalzition///////////////////////////
         deviceL = 125_um;
-        deviceW = 15_um;
+        deviceW = 3.5_um;
         laserRidge = 3_um;
         nanogap = 0;
     ///////////////////////////device intinalzition///////////////////////////
